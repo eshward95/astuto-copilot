@@ -1,4 +1,4 @@
-import Card from "../Menu";
+import Menu from "../Menu";
 
 interface MenuListProps {
   mainMenu: {
@@ -12,7 +12,7 @@ const MenuList: React.FC<MenuListProps> = ({ mainMenu, handleMenu }) => {
   return (
     <div className="flex flex-wrap">
       {mainMenu.map((item, index) => (
-        <Card item={item} handleMenu={handleMenu} key={index} />
+        <Menu item={item} handleMenu={handleMenu} key={index} />
       ))}
     </div>
   );
