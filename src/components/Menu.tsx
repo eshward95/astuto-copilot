@@ -1,11 +1,11 @@
-interface CardProps {
+interface MenuProps {
   item: {
     label: string;
     value: number | string;
   };
   handleMenu: (value: number | string) => void;
 }
-const Card = ({ item, handleMenu }: CardProps) => {
+const Menu = ({ item, handleMenu }: MenuProps) => {
   const handleEvent = () => {
     handleMenu(item.value);
   };
@@ -21,4 +21,4 @@ const Card = ({ item, handleMenu }: CardProps) => {
   );
 };
 
-export default Card;
+export default Menu;

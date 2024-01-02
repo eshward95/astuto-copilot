@@ -24,9 +24,9 @@ const Collapsible = ({
   }, [isOpen]);
 
   return (
-    <div className="max-w mx-auto bg-white/70 shadow-md cursor-pointer p-1 py-2 transition-all">
+    <div className="max-w mx-auto bg-white/70 shadow-md cursor-pointer transition-all">
       <div
-        className="flex justify-between items-center"
+        className="flex justify-between items-center p-1 py-2"
         onClick={toggleCollapse}
       >
         <span className="text-xs font-medium text-gray-500">{title}</span>

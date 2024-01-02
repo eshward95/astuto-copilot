@@ -1,21 +1,21 @@
 import React from "react";
-import { USER, codeSnippet } from "../../../constant";
+import {
+  AssistType,
+  ChartType,
+  QueryType,
+  USER,
+  codeSnippet,
+} from "../../../constant";
 import Cards from "../../Cards";
 import Chart from "../../Chart";
 import Card from "../../Menu";
 import CodeBlock from "../../code-block";
 import Collapsible from "../../collapsible-section";
-import Assist from "../Assist";
-import User from "../User";
-interface MessageProps {
-  type: string;
-  content: string;
-  queryType: string;
-  queryText?: string;
-  subAssist?: { label: string; value: number | string }[];
-  cardMenu?: { title: string; content: string }[];
-  chartType?: string;
+import Profile from "../Profile";
+
+interface MessageProps extends AssistType {
   handleMenuEvent: (value: string | number) => void;
+  cardMenu?: { title: string; content: string }[];
 }
 const Message: React.FC<MessageProps> = ({
   type,
@@ -24,17 +24,17 @@ const Message: React.FC<MessageProps> = ({
   queryText = "",
   subAssist,
   cardMenu,
-  chartType = "PIE",
+  chartType = ChartType.PIE,
   handleMenuEvent,
 }) => {
   const renderQuery = (queryType: string) => {
     if (!queryType) return null;
     switch (queryType) {
-      case "CHART":
+      case QueryType.CHART:
         return <Chart type={chartType} />;
-      case "CODE":
+      case QueryType.CODE:
         return <CodeBlock language="sql" value={codeSnippet} />;
-      case "CARD":
+      case QueryType.CARD:
         return (
           cardMenu &&
           cardMenu?.map(({ title = "", content = "" }, idx) => (
@@ -47,15 +47,15 @@ const Message: React.FC<MessageProps> = ({
   return (
     <div>
       {type === USER ? (
-        <User content={content}>
+        <Profile type={type} content={content}>
           {queryText && (
             <Collapsible title={queryText} open={true}>
               {renderQuery(queryType)}
             </Collapsible>
           )}
-        </User>
+        </Profile>
       ) : (
-        <Assist content={content}>
+        <Profile type={type} content={content}>
           <Collapsible open={true} title={queryText}>
             {renderQuery(queryType)}
           </Collapsible>
@@ -67,7 +67,7 @@ const Message: React.FC<MessageProps> = ({
                 ))}
             </div>
           </Collapsible>
-        </Assist>
+        </Profile>
       )}
     </div>
   );

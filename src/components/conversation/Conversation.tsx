@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import {
-  ChartType,
+  AssistType,
   QueryType,
   USER,
   assist1,
@@ -9,21 +9,11 @@ import {
   user2,
   user3,
 } from "../../constant";
+import Feedback from "../Feedback";
 import Message from "./Message/Message";
 
-interface AssistType {
-  type: string;
-  content: string;
-  queryType: QueryType;
-  chartType?: ChartType;
-  queryText?: string;
-  subAssist?: Array<{ label: string; value: string }>;
-  assistData?: Array<{ title: string; content: string }>;
-  subAssistKey?: number;
-}
-
 const Conversation = () => {
-  const [satisfied, setSatisfied] = useState<boolean | null>(null);
+  const [satisfied, setSatisfied] = useState<boolean | null>(false);
   const [activeSubAssist, setActiveSubAssist] = useState(0);
   const [messageList, setMessagesList] = useState<AssistType[]>([
     {
@@ -42,12 +32,21 @@ const Conversation = () => {
       }, delay);
     });
   };
+  const scrollToBtm = () => {
+    setTimeout(() => {
+      window.scrollTo({
+        top: document.body.scrollHeight,
+        behavior: "smooth",
+      });
+    }, 1200);
+  };
 
   useEffect(() => {
-    fetchAssistData(1000, assist1).then((data) => {
+    fetchAssistData(1100, assist1).then((data) => {
       setSatisfied(false);
       const newList = [...messageList, data];
       setMessagesList(newList);
+      scrollToBtm();
     });
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -58,7 +57,6 @@ const Conversation = () => {
 
     if (value === "ASSIST-1") {
       setMessagesList((messages: AssistType[]) => [...messages, user2]);
-      //Simulating API calls
       fetchAssistData(1000, assist2).then((data) => {
         setActiveSubAssist(assist2.subAssistKey);
         setMessagesList((messages: AssistType[]) => [...messages, data]);
@@ -72,12 +70,7 @@ const Conversation = () => {
         setMessagesList((messages: AssistType[]) => [...messages, data]);
       });
     }
-    setTimeout(() => {
-      window.scrollTo({
-        top: document.body.scrollHeight,
-        behavior: "smooth",
-      });
-    }, 1200);
+    scrollToBtm();
   };
 
   return (
@@ -100,35 +93,10 @@ const Conversation = () => {
           handleMenuEvent={(item) => handleAssist(item)}
         />
       ))}
-      {satisfied != null && (
-        <div className="flex items-center justify-center gap-2">
-          {satisfied ? (
-            <>
-              <span className="text-xs text-gray-400">
-                Thank you for your feedback!
-              </span>
-            </>
-          ) : (
-            <div className="flex items-center gap-2">
-              <span className="text-xs text-gray-400">
-                Have the answers been satisfactory so far?
-              </span>
-              <div
-                className="flex  gap-2 cursor-pointer"
-                onClick={() => setSatisfied(true)}
-              >
-                <img src="/like.png" alt="like" width={12} />
-                <img
-                  src="/like.png"
-                  alt="like"
-                  width={12}
-                  className="rotate-180"
-                />
-              </div>
-            </div>
-          )}
-        </div>
-      )}
+      <Feedback
+        satisfied={satisfied}
+        handleFeedback={() => setSatisfied(true)}
+      />
     </div>
   );
 };
